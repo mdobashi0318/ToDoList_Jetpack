@@ -1,8 +1,7 @@
-package com.dobashi.todolist_jetpack
+package com.dobashi.todolist_jetpack.model
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.dobashi.todolist_jetpack.model.ToDoModel
 
 
 @Database(entities = [ToDoModel::class], version = 1, exportSchema = false)

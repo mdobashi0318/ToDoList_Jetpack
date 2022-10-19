@@ -1,7 +1,6 @@
-package com.dobashi.todolist_jetpack
+package com.dobashi.todolist_jetpack.model
 
 import androidx.room.*
-import com.dobashi.todolist_jetpack.model.ToDoModel
 
 @Dao
 interface ToDoModelDao {

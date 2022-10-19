@@ -2,12 +2,8 @@ package com.dobashi.todolist_jetpack
 
 import android.app.Application
 import androidx.room.Room
-import com.dobashi.todolist_jetpack.model.ToDoModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.dobashi.todolist_jetpack.model.TodoRoomDatabase
 import java.text.SimpleDateFormat
-import java.util.*
 
 class TodoApplication : Application() {
     companion object {
