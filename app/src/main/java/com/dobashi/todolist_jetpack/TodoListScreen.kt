@@ -7,52 +7,36 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.DetailDestination
-import com.dobashi.todolist_jetpack.other.ListDestination
-import kotlinx.coroutines.runBlocking
 
 @Composable
-fun TodoListScreen(modifier: Modifier = Modifier) {
-
-    val todoModel = runBlocking {
-        TodoApplication.database.todoDao().getAll()
-    }
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = ListDestination.route) {
-        composable(ListDestination.route) {
-            LazyColumn {
-                items(todoModel) { todo ->
-                    TodoRow(
-                        todo = todo,
-                        clickable = { navController.navigate("${DetailDestination.route}/${todo.createTime}") })
-                }
+fun TodoListScreen(
+    todoModel: List<ToDoModel>,
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Text(
+                text = stringResource(id = R.string.app_name)
+            )
+        })
+    }) {
+        LazyColumn {
+            items(todoModel) { todo ->
+                TodoRow(
+                    todo = todo,
+                    clickable = { navController.navigate("${DetailDestination.route}/${todo.createTime}") })
             }
         }
-
-        composable(
-            route = DetailDestination.routeWithArgs,
-            arguments = DetailDestination.arguments
-        ) { arg ->
-            TodoDetailScreen(
-                createTime = arg.arguments?.getString(DetailDestination.argumentName).toString(),
-                navController = navController
-            )
-        }
-
     }
-
-
 }
 
 
