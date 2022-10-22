@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.DetailDestination
+import com.dobashi.todolist_jetpack.other.RegistrationDestination
 
 @Composable
 fun TodoListScreen(
@@ -31,7 +32,7 @@ fun TodoListScreen(
             )
         })
     }, floatingActionButton = {
-        FloatingActionButton(onClick = { /*TODO*/ }) {
+        FloatingActionButton(onClick = { navController.navigate(RegistrationDestination.route) }) {
             Icon(Icons.Default.Add, "Add")
         }
     }) {

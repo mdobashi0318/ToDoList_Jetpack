@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dobashi.todolist_jetpack.other.DetailDestination
 import com.dobashi.todolist_jetpack.other.ListDestination
+import com.dobashi.todolist_jetpack.other.RegistrationDestination
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -36,6 +37,12 @@ fun TodoNavHost(modifier: Modifier = Modifier) {
                 createTime = arg.arguments?.getString(DetailDestination.argumentName).toString(),
                 navController = navController
             )
+        }
+
+        composable(
+            route = RegistrationDestination.route
+        ) { _ ->
+            TodoRegistrationScreen(navController = navController)
         }
 
     }

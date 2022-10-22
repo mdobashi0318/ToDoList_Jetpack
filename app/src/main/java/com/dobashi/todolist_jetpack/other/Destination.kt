@@ -21,3 +21,13 @@ object DetailDestination: Destination {
     )
     val routeWithArgs = "${route}/{${argumentName}}"
 }
+
+
+object RegistrationDestination: Destination {
+    override val route: String = "registration"
+    const val argumentName = "createTime"
+    val arguments = listOf(
+        navArgument(argumentName) { type = NavType.StringType }
+    )
+    val routeWithArgs = "${route}/{${argumentName}}"
+}

@@ -5,6 +5,7 @@
     <string name="detail_title">詳細</string>
     <string name="complete_title">詳細</string>
 
+    <string name="add">登録</string>
     <string name="edit">編集</string>
     <string name="delete">削除</string>
 </resources>
