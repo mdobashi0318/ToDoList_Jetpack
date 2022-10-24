@@ -31,12 +31,50 @@ fun TodoRegistrationScreen(
     navController: NavController,
     todoRegistrationViewModel: TodoRegistrationViewModel = viewModel()
 ) {
-
+    todoRegistrationViewModel.find(createTime)
     val context = LocalContext.current
-    val mode: Mode = if (createTime == null) Mode.Add else Mode.Edit
+
+    var name by remember {
+        mutableStateOf(todoRegistrationViewModel.name)
+    }
+
+    var year by remember {
+        mutableStateOf(todoRegistrationViewModel.year)
+    }
+
+    var month by remember {
+        mutableStateOf(todoRegistrationViewModel.month)
+    }
+
+    var day by remember {
+        mutableStateOf(todoRegistrationViewModel.day)
+    }
+
+    var isShowDatePicker by remember {
+        mutableStateOf(false)
+    }
+
+    var hour by remember {
+        mutableStateOf(todoRegistrationViewModel.hour)
+    }
+
+    var min by remember {
+        mutableStateOf(todoRegistrationViewModel.min)
+    }
+
+    var detail by remember {
+        mutableStateOf(todoRegistrationViewModel.detail)
+    }
+
+    var isShowTimePicker by remember {
+        mutableStateOf(false)
+    }
+
+
+
     Scaffold(topBar = {
         TopAppBar(
-            title = { Text(if (mode == Mode.Add) "作成" else "編集") },
+            title = { Text(if (todoRegistrationViewModel.mode == Mode.Add) "作成" else "編集") },
             navigationIcon = {
                 IconButton(
                     onClick = { navController.navigateUp() }
@@ -49,46 +87,6 @@ fun TodoRegistrationScreen(
             },
         )
     }) {
-
-        var name by remember {
-            mutableStateOf("")
-        }
-
-        val calendar = Calendar.getInstance()
-
-        var year by remember {
-            mutableStateOf(calendar.get(Calendar.YEAR))
-        }
-
-        var month by remember {
-            mutableStateOf(calendar.get(Calendar.MONTH) + 1)
-        }
-
-        var day by remember {
-            mutableStateOf(calendar.get(Calendar.DAY_OF_MONTH))
-        }
-
-        var isShowDatePicker by remember {
-            mutableStateOf(false)
-        }
-
-        var isShowTimePicker by remember {
-            mutableStateOf(false)
-        }
-
-        var hour by remember {
-            mutableStateOf(calendar.get(Calendar.HOUR))
-        }
-
-        var min by remember {
-            mutableStateOf(
-                calendar.get(Calendar.MINUTE)
-            )
-        }
-
-        var detail by remember {
-            mutableStateOf("")
-        }
 
         Column(modifier = Modifier.padding(top = 8.dp)) {
             Column(
@@ -126,7 +124,7 @@ fun TodoRegistrationScreen(
                             month = _month + 1
                             day = _day
                             isShowDatePicker = false
-                        }, year, month, day
+                        }, year, month - 1, day
                     )
                     datePicker.setOnCancelListener {
                         isShowDatePicker = false
@@ -185,11 +183,12 @@ fun TodoRegistrationScreen(
                 onClick = {
                     // TODO: 未入力チェック処理
 
-                    if (mode == Mode.Add) {
+                    if (todoRegistrationViewModel.mode == Mode.Add) {
                         runBlocking {
                             todoRegistrationViewModel.add(
                                 ToDoModel(
-                                    createTime = todoRegistrationViewModel.format.format(Date()).toString(),
+                                    createTime = todoRegistrationViewModel.format.format(Date())
+                                        .toString(),
                                     toDoName = name,
                                     todoDate = "${year}/${month}/${day}",
                                     todoTime = "${hour}:${min}",
@@ -200,7 +199,19 @@ fun TodoRegistrationScreen(
                         }
                         navController.navigateUp()
                     } else {
-                        // TODO: 更新処理
+                        runBlocking {
+                            todoRegistrationViewModel.update(
+                                ToDoModel(
+                                    createTime = todoRegistrationViewModel.createTime,
+                                    toDoName = name,
+                                    todoDate = "${year}/${month}/${day}",
+                                    todoTime = "${hour}:${min}",
+                                    toDoDetail = detail,
+                                    completionFlag = "completionFlag"
+                                )
+                            )
+                        }
+                        navController.navigateUp()
                     }
                 },
                 modifier = Modifier
@@ -210,7 +221,11 @@ fun TodoRegistrationScreen(
                         vertical = 20.dp
                     )
             ) {
-                Text(if (mode == Mode.Add) stringResource(id = R.string.add) else stringResource(id = R.string.edit))
+                Text(
+                    if (todoRegistrationViewModel.mode == Mode.Add) stringResource(id = R.string.add) else stringResource(
+                        id = R.string.update
+                    )
+                )
             }
         }
     }

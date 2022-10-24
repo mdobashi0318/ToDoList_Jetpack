@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dobashi.todolist_jetpack.other.RegistrationDestination
 import kotlinx.coroutines.runBlocking
 
 
@@ -54,7 +55,9 @@ fun TodoDetailScreen(
                         expanded = expanded,
                         onDismissRequest = { expanded = false },
                     ) {
-                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                        DropdownMenuItem(onClick = {
+                            navController.navigate("${RegistrationDestination.route}/${createTime}")
+                        }) {
                             Text(text = stringResource(id = R.string.edit))
                         }
 

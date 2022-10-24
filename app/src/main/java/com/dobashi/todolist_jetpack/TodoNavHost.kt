@@ -34,10 +34,21 @@ fun TodoNavHost(modifier: Modifier = Modifier) {
             )
         }
 
+
         composable(
             route = RegistrationDestination.route
         ) { _ ->
             TodoRegistrationScreen(navController = navController)
+        }
+
+        composable(
+            route = RegistrationDestination.routeWithArgs,
+            arguments = RegistrationDestination.arguments
+        ) { arg ->
+            TodoRegistrationScreen(
+                createTime = arg.arguments?.getString(RegistrationDestination.argumentName),
+                navController = navController
+            )
         }
 
     }

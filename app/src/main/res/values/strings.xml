@@ -8,4 +8,6 @@
     <string name="add">登録</string>
     <string name="edit">編集</string>
     <string name="delete">削除</string>
+    <string name="update">更新</string>
+
 </resources>
