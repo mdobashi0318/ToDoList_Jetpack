@@ -18,13 +18,18 @@ import androidx.navigation.NavController
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.DetailDestination
 import com.dobashi.todolist_jetpack.other.RegistrationDestination
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun TodoListScreen(
-    todoModel: List<ToDoModel>,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+
+    val todoModel = runBlocking {
+        TodoApplication.database.todoDao().getAll()
+    }
+
     Scaffold(topBar = {
         TopAppBar(title = {
             Text(
@@ -35,6 +40,7 @@ fun TodoListScreen(
         FloatingActionButton(onClick = { navController.navigate(RegistrationDestination.route) }) {
             Icon(Icons.Default.Add, "Add")
         }
+
     }) {
         LazyColumn {
             items(todoModel) { todo ->

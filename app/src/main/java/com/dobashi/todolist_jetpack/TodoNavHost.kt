@@ -8,14 +8,10 @@ import androidx.navigation.compose.rememberNavController
 import com.dobashi.todolist_jetpack.other.DetailDestination
 import com.dobashi.todolist_jetpack.other.ListDestination
 import com.dobashi.todolist_jetpack.other.RegistrationDestination
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun TodoNavHost(modifier: Modifier = Modifier) {
 
-    val todoModel = runBlocking {
-        TodoApplication.database.todoDao().getAll()
-    }
     val navController = rememberNavController()
 
     NavHost(
@@ -24,7 +20,6 @@ fun TodoNavHost(modifier: Modifier = Modifier) {
     ) {
         composable(ListDestination.route) {
             TodoListScreen(
-                todoModel = todoModel,
                 navController = navController
             )
         }
