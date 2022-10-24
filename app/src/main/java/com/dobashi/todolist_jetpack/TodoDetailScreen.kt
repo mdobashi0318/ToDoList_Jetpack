@@ -1,10 +1,7 @@
 package com.dobashi.todolist_jetpack
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -14,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dobashi.todolist_jetpack.other.CompletionFlag
 import com.dobashi.todolist_jetpack.other.RegistrationDestination
 import kotlinx.coroutines.runBlocking
 
@@ -30,6 +28,10 @@ fun TodoDetailScreen(
 
     var expanded by remember {
         mutableStateOf(false)
+    }
+
+    var isCompletion by remember {
+        mutableStateOf(CompletionFlag.getCompletionFlag(model.completionFlag))
     }
 
     Scaffold(
@@ -83,6 +85,33 @@ fun TodoDetailScreen(
                 title = stringResource(id = R.string.detail_title),
                 value = model.toDoDetail
             )
+
+            Card(
+                elevation = 8.dp,
+                modifier = Modifier
+                    .padding(
+                        horizontal = 17.dp,
+                        vertical = 8.dp
+                    )
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 17.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.complete_title),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(vertical = 10.dp)
+                    )
+                    Switch(checked = isCompletion,
+                        onCheckedChange = {
+                            // TODO: completionFlagの更新処理
+                            isCompletion = !isCompletion
+                        })
+                }
+            }
         }
     }
 }
