@@ -11,8 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.CompletionFlag
 import com.dobashi.todolist_jetpack.other.RegistrationDestination
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
@@ -33,6 +37,7 @@ fun TodoDetailScreen(
     var isCompletion by remember {
         mutableStateOf(CompletionFlag.getCompletionFlag(model.completionFlag))
     }
+    if (model == null) return
 
     Scaffold(
         topBar = {
@@ -63,7 +68,10 @@ fun TodoDetailScreen(
                             Text(text = stringResource(id = R.string.edit))
                         }
 
-                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                        DropdownMenuItem(onClick = {
+                            delete(model)
+                            navController.navigateUp()
+                        }) {
                             Text(text = stringResource(id = R.string.delete))
                         }
                     }
@@ -137,6 +145,14 @@ private fun DetailCard(title: String, value: String) {
             Text(text = title)
             Text(text = value)
         }
+    }
+
+}
+
+
+private fun delete(model: ToDoModel) {
+    CoroutineScope(Dispatchers.IO).launch {
+        TodoApplication.database.todoDao().delete(model)
     }
 
 }
