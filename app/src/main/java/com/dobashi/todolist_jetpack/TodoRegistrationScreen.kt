@@ -2,9 +2,9 @@ package com.dobashi.todolist_jetpack
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.icu.util.Calendar
 import android.widget.DatePicker
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -71,6 +71,11 @@ fun TodoRegistrationScreen(
     }
 
 
+    var isValidation by remember {
+        mutableStateOf(false)
+    }
+
+
 
     Scaffold(topBar = {
         TopAppBar(
@@ -87,6 +92,18 @@ fun TodoRegistrationScreen(
             },
         )
     }) {
+
+        if (isValidation) {
+            AlertDialog(
+                onDismissRequest = { isValidation = false },
+                title = { Text(text = "未入力の箇所があります") },
+                confirmButton = {
+                    TextButton(onClick = { isValidation = false }) {
+                        Text(text = "閉じる")
+                    }
+                },
+            )
+        }
 
         Column(modifier = Modifier.padding(top = 8.dp)) {
             Column(
@@ -181,7 +198,10 @@ fun TodoRegistrationScreen(
 
             Button(
                 onClick = {
-                    // TODO: 未入力チェック処理
+                    if (name.isEmpty() || detail.isEmpty()) {
+                        isValidation = true
+                        return@Button
+                    }
 
                     if (todoRegistrationViewModel.mode == Mode.Add) {
                         runBlocking {
@@ -213,6 +233,17 @@ fun TodoRegistrationScreen(
                         }
                         navController.navigateUp()
                     }
+
+                    Toast.makeText(
+                        context,
+                        "Todoを${
+                            if (todoRegistrationViewModel.mode == Mode.Add) context.getString(R.string.add) else context.getString(
+                                R.string.update
+                            )
+                        }しました",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -229,5 +260,4 @@ fun TodoRegistrationScreen(
             }
         }
     }
-
 }
