@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.dobashi.todolist_jetpack.extensions.addFirstZero
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.Mode
 import kotlinx.coroutines.runBlocking
@@ -124,9 +123,8 @@ fun TodoRegistrationScreen(
                 Text(text = "日付")
                 Row {
                     Text(
-                        text = "${year}/${month.toString().addFirstZero()}/${
-                            day.toString().addFirstZero()
-                        }", modifier = Modifier.weight(1f)
+                        text = stringResource(id = R.string.dateFormat, year, month, day),
+                        modifier = Modifier.weight(1f)
                     )
                     Button(onClick = { isShowDatePicker = !isShowDatePicker }) {
                         Icon(imageVector = Icons.Default.DateRange, contentDescription = "")
@@ -158,9 +156,8 @@ fun TodoRegistrationScreen(
                 Text(text = "時間")
                 Row() {
                     Text(
-                        text = "${hour.toString().addFirstZero()}:${
-                            min.toString().addFirstZero()
-                        }", modifier = Modifier.weight(1f)
+                        text = stringResource(id = R.string.timeFormat, hour, min),
+                        modifier = Modifier.weight(1f)
                     )
                     Button(onClick = { isShowTimePicker = !isShowTimePicker }) {
                         Icon(imageVector = Icons.Default.Timer, contentDescription = "")

@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dobashi.todolist_jetpack.extensions.splitDate
+import com.dobashi.todolist_jetpack.extensions.splitTime
 import com.dobashi.todolist_jetpack.model.ToDoModel
-import com.dobashi.todolist_jetpack.other.CompletionFlag
-import com.dobashi.todolist_jetpack.other.DetailDestination
-import com.dobashi.todolist_jetpack.other.RegistrationDestination
+import com.dobashi.todolist_jetpack.other.*
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -65,13 +65,31 @@ private fun TodoRow(todo: ToDoModel, clickable: () -> Unit, modifier: Modifier =
         Column(modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
             Row() {
                 Text(text = todo.toDoName)
-                Text(modifier = Modifier.padding(start = 10.dp),
+                Text(
+                    modifier = Modifier.padding(start = 10.dp),
                     text = if (CompletionFlag.getCompletionFlag(todo.completionFlag)) stringResource(
                         id = R.string.completion
                     ) else stringResource(id = R.string.unfinished)
                 )
             }
-            Text(text = "${todo.todoDate} ${todo.todoTime}")
+            val date = todo.todoDate.splitDate()
+            val time = todo.todoTime.splitTime()
+            Text(
+                text = "${
+                    stringResource(
+                        id = R.string.dateFormat,
+                        date[0],
+                        date[1],
+                        date[2]
+                    )
+                } ${
+                    stringResource(
+                        id = R.string.timeFormat,
+                        time[0],
+                        time[1]
+                    )
+                }"
+            )
         }
     }
 

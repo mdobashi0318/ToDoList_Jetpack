@@ -14,4 +14,7 @@
     <string name="unfinished">未完了</string>
 
 
+    <string name="dateFormat">%d/%02d/%02d</string>
+    <string name="timeFormat">%02d:%02d</string>
+
 </resources>

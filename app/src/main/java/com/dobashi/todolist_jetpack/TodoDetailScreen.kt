@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dobashi.todolist_jetpack.extensions.splitDate
+import com.dobashi.todolist_jetpack.extensions.splitTime
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.CompletionFlag
 import com.dobashi.todolist_jetpack.other.RegistrationDestination
@@ -84,9 +86,24 @@ fun TodoDetailScreen(
                 .padding(top = 8.dp)
                 .fillMaxSize()
         ) {
+            val date = model.todoDate.splitDate()
+            val time = model.todoTime.splitTime()
             DetailCard(
                 title = stringResource(id = R.string.date_title),
-                value = "${model.todoDate}\n${model.todoTime}"
+                value = "${
+                    stringResource(
+                        id = R.string.dateFormat,
+                        date[0],
+                        date[1],
+                        date[2]
+                    )
+                }\n${
+                    stringResource(
+                        id = R.string.timeFormat,
+                        time[0],
+                        time[1]
+                    )
+                }"
             )
 
             DetailCard(
