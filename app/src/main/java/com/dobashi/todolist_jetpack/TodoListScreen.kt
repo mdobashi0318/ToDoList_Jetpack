@@ -1,5 +1,6 @@
 package com.dobashi.todolist_jetpack
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,8 +8,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.RestoreFromTrash
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -16,6 +20,9 @@ import com.dobashi.todolist_jetpack.extensions.splitDate
 import com.dobashi.todolist_jetpack.extensions.splitTime
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -24,15 +31,28 @@ fun TodoListScreen(
     modifier: Modifier = Modifier
 ) {
 
-    val todoModel = runBlocking {
+    var todoModel = runBlocking {
         TodoApplication.database.todoDao().getAll()
     }
+
+
+    var isAllDelete by remember {
+        mutableStateOf(false)
+    }
+
+    val context = LocalContext.current
 
     Scaffold(topBar = {
         TopAppBar(title = {
             Text(
                 text = stringResource(id = R.string.app_name)
             )
+        }, actions = {
+            IconButton(onClick = {
+                isAllDelete = true
+            }) {
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
+            }
         })
     }, floatingActionButton = {
         FloatingActionButton(onClick = { navController.navigate(RegistrationDestination.route) }) {
@@ -40,6 +60,28 @@ fun TodoListScreen(
         }
 
     }) {
+
+        if (isAllDelete) {
+            AlertDialog(onDismissRequest = { isAllDelete = false },
+                title = { Text(text = "全件削除しますか？") },
+                confirmButton = {
+                    Button(onClick = {
+                        allDelete()
+                        todoModel = listOf()
+                        isAllDelete = false
+                        Toast.makeText(context, "全件削除しました", Toast.LENGTH_SHORT).show()
+                    }) {
+                        Text(text = "削除")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = { isAllDelete = false }) {
+                        Text(text = "キャンセル")
+                    }
+                })
+        }
+
+
         LazyColumn {
             items(todoModel) { todo ->
                 TodoRow(
@@ -93,4 +135,11 @@ private fun TodoRow(todo: ToDoModel, clickable: () -> Unit, modifier: Modifier =
         }
     }
 
+}
+
+
+private fun allDelete() {
+    CoroutineScope(Dispatchers.IO).launch {
+        TodoApplication.database.todoDao().deleteAll()
+    }
 }
