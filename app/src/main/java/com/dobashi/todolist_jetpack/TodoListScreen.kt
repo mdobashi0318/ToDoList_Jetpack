@@ -1,10 +1,7 @@
 package com.dobashi.todolist_jetpack
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -16,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dobashi.todolist_jetpack.model.ToDoModel
+import com.dobashi.todolist_jetpack.other.CompletionFlag
 import com.dobashi.todolist_jetpack.other.DetailDestination
 import com.dobashi.todolist_jetpack.other.RegistrationDestination
 import kotlinx.coroutines.runBlocking
@@ -67,7 +65,11 @@ private fun TodoRow(todo: ToDoModel, clickable: () -> Unit, modifier: Modifier =
         Column(modifier = modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
             Row() {
                 Text(text = todo.toDoName)
-                Text(text = todo.completionFlag)
+                Text(modifier = Modifier.padding(start = 10.dp),
+                    text = if (CompletionFlag.getCompletionFlag(todo.completionFlag)) stringResource(
+                        id = R.string.completion
+                    ) else stringResource(id = R.string.unfinished)
+                )
             }
             Text(text = "${todo.todoDate} ${todo.todoTime}")
         }

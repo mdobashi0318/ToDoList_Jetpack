@@ -10,4 +10,8 @@
     <string name="delete">削除</string>
     <string name="update">更新</string>
 
+    <string name="completion">完了</string>
+    <string name="unfinished">未完了</string>
+
+
 </resources>
