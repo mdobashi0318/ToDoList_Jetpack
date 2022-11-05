@@ -82,7 +82,15 @@ fun TodoListScreen(
         }
 
 
-        LazyColumn {
+        if (todoModel.isEmpty()) {
+            Text(
+                text = stringResource(id = R.string.noTodo),
+                modifier = Modifier
+                    .padding(top = 18.dp, start = 18.dp)
+            )
+            return@Scaffold
+        }
+        LazyColumn() {
             items(todoModel) { todo ->
                 TodoRow(
                     todo = todo,
