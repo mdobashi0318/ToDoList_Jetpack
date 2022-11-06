@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -33,19 +34,19 @@ fun TodoRegistrationScreen(
     todoRegistrationViewModel.find(createTime)
     val context = LocalContext.current
 
-    var name by remember {
+    var name by rememberSaveable {
         mutableStateOf(todoRegistrationViewModel.name)
     }
 
-    var year by remember {
+    var year by rememberSaveable {
         mutableStateOf(todoRegistrationViewModel.year)
     }
 
-    var month by remember {
+    var month by rememberSaveable {
         mutableStateOf(todoRegistrationViewModel.month)
     }
 
-    var day by remember {
+    var day by rememberSaveable {
         mutableStateOf(todoRegistrationViewModel.day)
     }
 
@@ -53,15 +54,15 @@ fun TodoRegistrationScreen(
         mutableStateOf(false)
     }
 
-    var hour by remember {
+    var hour by rememberSaveable {
         mutableStateOf(todoRegistrationViewModel.hour)
     }
 
-    var min by remember {
+    var min by rememberSaveable {
         mutableStateOf(todoRegistrationViewModel.min)
     }
 
-    var detail by remember {
+    var detail by rememberSaveable {
         mutableStateOf(todoRegistrationViewModel.detail)
     }
 
