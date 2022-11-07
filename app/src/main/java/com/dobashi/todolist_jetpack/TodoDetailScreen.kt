@@ -137,7 +137,8 @@ fun TodoDetailScreen(
                     )
                     Switch(checked = isCompletion,
                         onCheckedChange = {
-                            // TODO: completionFlagの更新処理
+                            model.completionFlag = if(it) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value
+                            updateFlag(model)
                             isCompletion = !isCompletion
                         })
                 }
@@ -176,7 +177,13 @@ private fun delete(model: ToDoModel) {
     CoroutineScope(Dispatchers.IO).launch {
         TodoApplication.database.todoDao().delete(model)
     }
+}
 
+
+private fun updateFlag(model: ToDoModel) {
+    CoroutineScope(Dispatchers.IO).launch {
+        TodoApplication.database.todoDao().update(model)
+    }
 }
 
 
