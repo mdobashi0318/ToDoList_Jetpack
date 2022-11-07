@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dobashi.todolist_jetpack.model.ToDoModel
+import com.dobashi.todolist_jetpack.other.CompletionFlag
 import com.dobashi.todolist_jetpack.other.Mode
 import kotlinx.coroutines.runBlocking
 import java.util.*
@@ -211,7 +212,7 @@ fun TodoRegistrationScreen(
                                     todoDate = "${year}/${month}/${day}",
                                     todoTime = "${hour}:${min}",
                                     toDoDetail = detail,
-                                    completionFlag = "completionFlag"
+                                    completionFlag = CompletionFlag.Unfinished.value
                                 )
                             )
                         }
@@ -225,7 +226,7 @@ fun TodoRegistrationScreen(
                                     todoDate = "${year}/${month}/${day}",
                                     todoTime = "${hour}:${min}",
                                     toDoDetail = detail,
-                                    completionFlag = "completionFlag"
+                                    completionFlag = CompletionFlag.Unfinished.value
                                 )
                             )
                         }
