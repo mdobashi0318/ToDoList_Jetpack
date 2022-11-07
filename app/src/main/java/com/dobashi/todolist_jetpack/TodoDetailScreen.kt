@@ -1,5 +1,6 @@
 package com.dobashi.todolist_jetpack
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -41,6 +43,8 @@ fun TodoDetailScreen(
     }
     if (model == null) return
 
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,6 +77,7 @@ fun TodoDetailScreen(
                         DropdownMenuItem(onClick = {
                             delete(model)
                             navController.navigateUp()
+                            Toast.makeText(context, "削除しました", Toast.LENGTH_SHORT).show()
                         }) {
                             Text(text = stringResource(id = R.string.delete))
                         }
