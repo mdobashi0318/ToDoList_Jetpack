@@ -9,7 +9,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.RestoreFromTrash
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +39,15 @@ fun TodoListScreen(
         mutableStateOf(false)
     }
 
+    var selectedTabIndex by remember {
+        mutableStateOf(0)
+    }
+
+    var titles = listOf<String>(
+        stringResource(id = R.string.unfinished),
+        stringResource(id = R.string.completion)
+    )
+
     val context = LocalContext.current
 
     Scaffold(topBar = {
@@ -60,41 +68,57 @@ fun TodoListScreen(
         }
 
     }) {
-
-        if (isAllDelete) {
-            AlertDialog(onDismissRequest = { isAllDelete = false },
-                title = { Text(text = "全件削除しますか？") },
-                confirmButton = {
-                    Button(onClick = {
-                        allDelete()
-                        todoModel = listOf()
-                        isAllDelete = false
-                        Toast.makeText(context, "全件削除しました", Toast.LENGTH_SHORT).show()
-                    }) {
-                        Text(text = "削除")
+        Column {
+            TabRow(selectedTabIndex = selectedTabIndex) {
+                titles.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        modifier = Modifier
+                            .height(50.dp)
+                    ) {
+                        Text(
+                            text = title
+                        )
                     }
-                },
-                dismissButton = {
-                    Button(onClick = { isAllDelete = false }) {
-                        Text(text = "キャンセル")
-                    }
-                })
-        }
+                }
+            }
 
+            if (isAllDelete) {
+                AlertDialog(onDismissRequest = { isAllDelete = false },
+                    title = { Text(text = "全件削除しますか？") },
+                    confirmButton = {
+                        Button(onClick = {
+                            allDelete()
+                            todoModel = listOf()
+                            isAllDelete = false
+                            Toast.makeText(context, "全件削除しました", Toast.LENGTH_SHORT).show()
+                        }) {
+                            Text(text = "削除")
+                        }
+                    },
+                    dismissButton = {
+                        Button(onClick = { isAllDelete = false }) {
+                            Text(text = "キャンセル")
+                        }
+                    })
+            }
 
-        if (todoModel.isEmpty()) {
-            Text(
-                text = stringResource(id = R.string.noTodo),
-                modifier = Modifier
-                    .padding(top = 18.dp, start = 18.dp)
-            )
-            return@Scaffold
-        }
-        LazyColumn() {
-            items(todoModel) { todo ->
-                TodoRow(
-                    todo = todo,
-                    clickable = { navController.navigate("${DetailDestination.route}/${todo.createTime}") })
+            if (todoModel.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.noTodo),
+                    modifier = Modifier
+                        .padding(top = 18.dp, start = 18.dp)
+                )
+                return@Column
+            }
+            // TODO: tabごとにtodoを出し分ける
+            LazyColumn() {
+                items(todoModel) { todo ->
+                    TodoRow(
+                        todo = todo,
+                        clickable = { navController.navigate("${DetailDestination.route}/${todo.createTime}") })
+                }
             }
         }
     }
