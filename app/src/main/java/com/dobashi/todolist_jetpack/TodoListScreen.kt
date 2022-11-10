@@ -30,8 +30,12 @@ fun TodoListScreen(
     modifier: Modifier = Modifier
 ) {
 
+    var selectedTabIndex by remember {
+        mutableStateOf(0)
+    }
+
     var todoModel = runBlocking {
-        TodoApplication.database.todoDao().getAll()
+        TodoApplication.database.todoDao().getTodos(if(selectedTabIndex == CompletionFlag.Completion.value.toInt()) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value )
     }
 
 
@@ -39,9 +43,6 @@ fun TodoListScreen(
         mutableStateOf(false)
     }
 
-    var selectedTabIndex by remember {
-        mutableStateOf(0)
-    }
 
     var titles = listOf<String>(
         stringResource(id = R.string.unfinished),
@@ -112,7 +113,7 @@ fun TodoListScreen(
                 )
                 return@Column
             }
-            // TODO: tabごとにtodoを出し分ける
+
             LazyColumn() {
                 items(todoModel) { todo ->
                     TodoRow(
