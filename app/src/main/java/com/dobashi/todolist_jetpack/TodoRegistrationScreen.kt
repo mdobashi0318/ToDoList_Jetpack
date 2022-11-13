@@ -205,6 +205,7 @@ fun TodoRegistrationScreen(
                     if (todoRegistrationViewModel.mode == Mode.Add) {
                         runBlocking {
                             todoRegistrationViewModel.add(
+                                context,
                                 ToDoModel(
                                     createTime = todoRegistrationViewModel.format.format(Date())
                                         .toString(),
@@ -220,6 +221,7 @@ fun TodoRegistrationScreen(
                     } else {
                         runBlocking {
                             todoRegistrationViewModel.update(
+                                context,
                                 ToDoModel(
                                     createTime = todoRegistrationViewModel.createTime,
                                     toDoName = name,

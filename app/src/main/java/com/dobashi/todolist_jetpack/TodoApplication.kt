@@ -3,7 +3,7 @@ package com.dobashi.todolist_jetpack
 import android.app.Application
 import androidx.room.Room
 import com.dobashi.todolist_jetpack.model.TodoRoomDatabase
-import java.text.SimpleDateFormat
+import com.dobashi.todolist_jetpack.other.Notification
 
 class TodoApplication : Application() {
     companion object {
@@ -18,23 +18,7 @@ class TodoApplication : Application() {
             "todo_database"
         ).build()
 
-
-        val format = SimpleDateFormat("MMddHHmmS")
-/*
-        CoroutineScope(Dispatchers.IO).launch {
-            database.todoDao()
-                .add(
-                    ToDoModel(
-                        format.format(Date()).toString(),
-                        "name${format.format(Date())}",
-                        "date",
-                        "time",
-                        "detail",
-                        "flag"
-                    )
-                )
-        }
-        */
+        Notification.createChannel(context = applicationContext)
     }
 
 }

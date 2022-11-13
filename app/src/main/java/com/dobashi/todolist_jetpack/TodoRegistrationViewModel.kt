@@ -1,11 +1,11 @@
 package com.dobashi.todolist_jetpack
 
+import android.content.Context
 import android.icu.util.Calendar
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.Mode
+import com.dobashi.todolist_jetpack.other.Notification
 import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 
@@ -35,7 +35,7 @@ class TodoRegistrationViewModel : ViewModel() {
 
 
     private var time: MutableMap<String, Int> =
-        mutableMapOf("hour" to calendar.get(Calendar.HOUR), "min" to calendar.get(Calendar.MINUTE))
+        mutableMapOf("hour" to calendar.get(Calendar.HOUR_OF_DAY), "min" to calendar.get(Calendar.MINUTE))
 
     var hour: Int
         get() = time["hour"] ?: 0
@@ -73,11 +73,13 @@ class TodoRegistrationViewModel : ViewModel() {
     }
 
 
-    suspend fun add(model: ToDoModel) {
+    suspend fun add(context: Context, model: ToDoModel) {
         TodoApplication.database.todoDao().add(model)
+        Notification.setNotification(context, model)
     }
 
-    suspend fun update(model: ToDoModel) {
+    suspend fun update(context: Context,model: ToDoModel) {
         TodoApplication.database.todoDao().update(model)
+        Notification.setNotification(context, model)
     }
 }

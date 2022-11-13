@@ -1,5 +1,6 @@
 package com.dobashi.todolist_jetpack
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import com.dobashi.todolist_jetpack.extensions.splitDate
 import com.dobashi.todolist_jetpack.extensions.splitTime
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.CompletionFlag
+import com.dobashi.todolist_jetpack.other.Notification
 import com.dobashi.todolist_jetpack.other.RegistrationDestination
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -75,7 +77,7 @@ fun TodoDetailScreen(
                         }
 
                         DropdownMenuItem(onClick = {
-                            delete(model)
+                            delete(context, model)
                             navController.navigateUp()
                             Toast.makeText(context, "削除しました", Toast.LENGTH_SHORT).show()
                         }) {
@@ -137,9 +139,15 @@ fun TodoDetailScreen(
                     )
                     Switch(checked = isCompletion,
                         onCheckedChange = {
-                            model.completionFlag = if(it) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value
+                            model.completionFlag =
+                                if (it) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value
                             updateFlag(model)
                             isCompletion = !isCompletion
+                            if (isCompletion) {
+                                Notification.cancelNotification(context, createTime)
+                            } else {
+                                Notification.setNotification(context, model)
+                            }
                         })
                 }
             }
@@ -173,9 +181,10 @@ private fun DetailCard(title: String, value: String) {
 }
 
 
-private fun delete(model: ToDoModel) {
+private fun delete(context: Context, model: ToDoModel) {
     CoroutineScope(Dispatchers.IO).launch {
         TodoApplication.database.todoDao().delete(model)
+        Notification.cancelNotification(context, model.createTime)
     }
 }
 

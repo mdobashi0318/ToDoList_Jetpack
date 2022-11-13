@@ -1,5 +1,6 @@
 package com.dobashi.todolist_jetpack
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -91,7 +92,7 @@ fun TodoListScreen(
                     title = { Text(text = "全件削除しますか？") },
                     confirmButton = {
                         Button(onClick = {
-                            allDelete()
+                            allDelete(context)
                             todoModel = listOf()
                             isAllDelete = false
                             Toast.makeText(context, "全件削除しました", Toast.LENGTH_SHORT).show()
@@ -172,8 +173,9 @@ private fun TodoRow(todo: ToDoModel, clickable: () -> Unit, modifier: Modifier =
 }
 
 
-private fun allDelete() {
+private fun allDelete(context: Context) {
     CoroutineScope(Dispatchers.IO).launch {
         TodoApplication.database.todoDao().deleteAll()
+        Notification.cancelAllNotification(context)
     }
 }
