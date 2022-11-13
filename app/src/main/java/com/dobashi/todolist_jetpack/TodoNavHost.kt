@@ -26,7 +26,8 @@ fun TodoNavHost(modifier: Modifier = Modifier) {
 
         composable(
             route = DetailDestination.routeWithArgs,
-            arguments = DetailDestination.arguments
+            arguments = DetailDestination.arguments,
+            deepLinks = DetailDestination.deepLinks
         ) { arg ->
             TodoDetailScreen(
                 createTime = arg.arguments?.getString(DetailDestination.argumentName).toString(),

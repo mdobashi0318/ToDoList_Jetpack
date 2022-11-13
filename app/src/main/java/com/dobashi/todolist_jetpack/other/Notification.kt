@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -45,18 +46,18 @@ class Notification {
                 setContentTitle(NOTIFICATION_TITLE)
                 setContentText(message)
 
-                    val intent = Intent(context, Receiver::class.java).apply {
-                        putExtra("createTime", createTime)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
+                val intent = Intent().apply {
+                    this.data =
+                        Uri.parse("todolist_jetpack://${DetailDestination.route}/${createTime}")
+                }
 
-                    val pending: PendingIntent = PendingIntent.getActivity(
-                        context,
-                        createTime.toInt(),
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE
-                    )
-                    setContentIntent(pending)
+                val pending: PendingIntent = PendingIntent.getActivity(
+                    context,
+                    createTime.toInt(),
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+                setContentIntent(pending)
                 setAutoCancel(true)
                 priority = NotificationCompat.PRIORITY_DEFAULT
             }

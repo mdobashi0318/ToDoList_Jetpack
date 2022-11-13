@@ -2,6 +2,7 @@ package com.dobashi.todolist_jetpack.other
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 
 interface Destination {
     val route: String
@@ -20,6 +21,10 @@ object DetailDestination: Destination {
         navArgument(argumentName) { type = NavType.StringType }
     )
     val routeWithArgs = "${route}/{${argumentName}}"
+    val deepLinks = listOf(
+        navDeepLink {
+            uriPattern = "todolist_jetpack://${route}/{${argumentName}}"
+        })
 }
 
 
