@@ -14,6 +14,7 @@ interface ToDoModelDao {
     @Query("SELECT * FROM todo_table WHERE createTime == :createTime")
     suspend fun getTodo(createTime: String): ToDoModel
 
+    @Throws
     @Insert
     suspend fun add(todo: ToDoModel)
 

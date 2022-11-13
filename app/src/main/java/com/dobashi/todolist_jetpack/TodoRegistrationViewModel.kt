@@ -34,8 +34,16 @@ class TodoRegistrationViewModel : ViewModel() {
     var day = calendar.get(Calendar.DAY_OF_MONTH)
 
 
+    private var _isError = false
+    val isError: Boolean
+        get() = _isError
+
+
     private var time: MutableMap<String, Int> =
-        mutableMapOf("hour" to calendar.get(Calendar.HOUR_OF_DAY), "min" to calendar.get(Calendar.MINUTE))
+        mutableMapOf(
+            "hour" to calendar.get(Calendar.HOUR_OF_DAY),
+            "min" to calendar.get(Calendar.MINUTE)
+        )
 
     var hour: Int
         get() = time["hour"] ?: 0
@@ -73,12 +81,21 @@ class TodoRegistrationViewModel : ViewModel() {
     }
 
 
+    @Throws
     suspend fun add(context: Context, model: ToDoModel) {
-        TodoApplication.database.todoDao().add(model)
-        Notification.setNotification(context, model)
+        _isError = false
+        try {
+            TodoApplication.database.todoDao().add(model)
+            Notification.setNotification(context, model)
+        } catch (e: Exception) {
+            _isError = true
+            throw Exception("作成に失敗しました")
+        }
+
+
     }
 
-    suspend fun update(context: Context,model: ToDoModel) {
+    suspend fun update(context: Context, model: ToDoModel) {
         TodoApplication.database.todoDao().update(model)
         Notification.setNotification(context, model)
     }

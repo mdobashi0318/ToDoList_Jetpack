@@ -204,20 +204,26 @@ fun TodoRegistrationScreen(
 
                     if (todoRegistrationViewModel.mode == Mode.Add) {
                         runBlocking {
-                            todoRegistrationViewModel.add(
-                                context,
-                                ToDoModel(
-                                    createTime = todoRegistrationViewModel.format.format(Date())
-                                        .toString(),
-                                    toDoName = name,
-                                    todoDate = "${year}/${month}/${day}",
-                                    todoTime = "${hour}:${min}",
-                                    toDoDetail = detail,
-                                    completionFlag = CompletionFlag.Unfinished.value
+                            try {
+                                todoRegistrationViewModel.add(
+                                    context,
+                                    ToDoModel(
+                                        createTime = todoRegistrationViewModel.format.format(Date())
+                                            .toString(),
+                                        toDoName = name,
+                                        todoDate = "${year}/${month}/${day}",
+                                        todoTime = "${hour}:${min}",
+                                        toDoDetail = detail,
+                                        completionFlag = CompletionFlag.Unfinished.value
+                                    )
                                 )
-                            )
+                                navController.navigateUp()
+                            } catch (e: Exception) {
+                                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                            }
                         }
-                        navController.navigateUp()
+
+                        if (todoRegistrationViewModel.isError) return@Button
                     } else {
                         runBlocking {
                             todoRegistrationViewModel.update(
