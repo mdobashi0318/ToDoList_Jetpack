@@ -37,7 +37,8 @@ fun TodoListScreen(
     }
 
     var todoModel = runBlocking {
-        TodoApplication.database.todoDao().getTodos(if(selectedTabIndex == CompletionFlag.Completion.value.toInt()) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value )
+        TodoApplication.database.todoDao()
+            .getTodos(if (selectedTabIndex == CompletionFlag.Completion.value.toInt()) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value)
     }
 
 
@@ -70,8 +71,10 @@ fun TodoListScreen(
             Icon(Icons.Default.Add, "Add")
         }
 
-    }) {
-        Column {
+    }) { padding ->
+        Column(
+            Modifier.padding(padding)
+        ) {
             TabRow(selectedTabIndex = selectedTabIndex) {
                 titles.forEachIndexed { index, title ->
                     Tab(

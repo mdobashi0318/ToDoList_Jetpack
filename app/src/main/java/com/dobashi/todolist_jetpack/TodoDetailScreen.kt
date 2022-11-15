@@ -1,5 +1,6 @@
 package com.dobashi.todolist_jetpack
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -87,10 +88,10 @@ fun TodoDetailScreen(
                 }
             )
         },
-    ) {
+    ) { padding ->
         Column(
             modifier
-                .padding(top = 8.dp)
+                .padding(padding)
                 .fillMaxSize()
         ) {
             val date = model.todoDate.splitDate()

@@ -92,7 +92,7 @@ fun TodoRegistrationScreen(
                 }
             },
         )
-    }) {
+    }) { padding ->
 
         if (isValidation) {
             AlertDialog(
@@ -106,7 +106,7 @@ fun TodoRegistrationScreen(
             )
         }
 
-        Column(modifier = Modifier.padding(top = 8.dp)) {
+        Column(modifier = Modifier.padding(padding)) {
             Column(
                 modifier = Modifier
                     .padding(horizontal = 17.dp, vertical = 8.dp)
