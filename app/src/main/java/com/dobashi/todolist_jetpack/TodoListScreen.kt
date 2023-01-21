@@ -1,7 +1,6 @@
 package com.dobashi.todolist_jetpack
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -76,8 +74,8 @@ fun TodoListScreen(
 
     }) { padding ->
         Column(
-            Modifier.padding(padding)
-                .fillMaxHeight()
+            Modifier
+                .padding(padding)
         ) {
 
             TabRow(selectedTabIndex = pagerState.currentPage) {
@@ -87,7 +85,6 @@ fun TodoListScreen(
                         onClick = {
                             runBlocking {
                                 pagerState.scrollToPage(index)
-                                Log.d("pagerState", "pagerState: $pagerState")
                             }
                         },
                         modifier = Modifier
