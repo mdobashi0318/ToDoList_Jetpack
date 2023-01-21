@@ -1,6 +1,7 @@
 package com.dobashi.todolist_jetpack
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,24 +22,26 @@ import com.dobashi.todolist_jetpack.extensions.splitDate
 import com.dobashi.todolist_jetpack.extensions.splitTime
 import com.dobashi.todolist_jetpack.model.ToDoModel
 import com.dobashi.todolist_jetpack.other.*
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun TodoListScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
 
-    var selectedTabIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
+    val pagerState = rememberPagerState(0)
 
     var todoModel = runBlocking {
         TodoApplication.database.todoDao()
-            .getTodos(if (selectedTabIndex == CompletionFlag.Completion.value.toInt()) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value)
+            .getTodos(if (pagerState.currentPage == CompletionFlag.Completion.value.toInt()) CompletionFlag.Completion.value else CompletionFlag.Unfinished.value)
     }
 
 
@@ -74,12 +77,19 @@ fun TodoListScreen(
     }) { padding ->
         Column(
             Modifier.padding(padding)
+                .fillMaxHeight()
         ) {
-            TabRow(selectedTabIndex = selectedTabIndex) {
+
+            TabRow(selectedTabIndex = pagerState.currentPage) {
                 titles.forEachIndexed { index, title ->
                     Tab(
-                        selected = selectedTabIndex == index,
-                        onClick = { selectedTabIndex = index },
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            runBlocking {
+                                pagerState.scrollToPage(index)
+                                Log.d("pagerState", "pagerState: $pagerState")
+                            }
+                        },
                         modifier = Modifier
                             .height(50.dp)
                     ) {
@@ -90,40 +100,45 @@ fun TodoListScreen(
                 }
             }
 
-            if (isAllDelete) {
-                AlertDialog(onDismissRequest = { isAllDelete = false },
-                    title = { Text(text = "全件削除しますか？") },
-                    confirmButton = {
-                        Button(onClick = {
-                            allDelete(context)
-                            todoModel = listOf()
-                            isAllDelete = false
-                            Toast.makeText(context, "全件削除しました", Toast.LENGTH_SHORT).show()
-                        }) {
-                            Text(text = "削除")
-                        }
-                    },
-                    dismissButton = {
-                        Button(onClick = { isAllDelete = false }) {
-                            Text(text = "キャンセル")
-                        }
-                    })
-            }
+            HorizontalPager(
+                titles.count(),
+                state = pagerState
+            ) {
+                if (isAllDelete) {
+                    AlertDialog(onDismissRequest = { isAllDelete = false },
+                        title = { Text(text = "全件削除しますか？") },
+                        confirmButton = {
+                            Button(onClick = {
+                                allDelete(context)
+                                todoModel = listOf()
+                                isAllDelete = false
+                                Toast.makeText(context, "全件削除しました", Toast.LENGTH_SHORT).show()
+                            }) {
+                                Text(text = "削除")
+                            }
+                        },
+                        dismissButton = {
+                            Button(onClick = { isAllDelete = false }) {
+                                Text(text = "キャンセル")
+                            }
+                        })
+                }
 
-            if (todoModel.isEmpty()) {
-                Text(
-                    text = stringResource(id = R.string.noTodo),
-                    modifier = Modifier
-                        .padding(top = 18.dp, start = 18.dp)
-                )
-                return@Column
-            }
+                if (todoModel.isEmpty()) {
+                    Text(
+                        text = stringResource(id = R.string.noTodo),
+                        modifier = Modifier
+                            .padding(top = 18.dp, start = 18.dp)
+                    )
+                    return@HorizontalPager
+                }
 
-            LazyColumn() {
-                items(todoModel) { todo ->
-                    TodoRow(
-                        todo = todo,
-                        clickable = { navController.navigate("${DetailDestination.route}/${todo.createTime}") })
+                LazyColumn(modifier.fillMaxHeight()) {
+                    items(todoModel) { todo ->
+                        TodoRow(
+                            todo = todo,
+                            clickable = { navController.navigate("${DetailDestination.route}/${todo.createTime}") })
+                    }
                 }
             }
         }
