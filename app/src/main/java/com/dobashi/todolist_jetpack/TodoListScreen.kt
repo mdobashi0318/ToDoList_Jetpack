@@ -126,6 +126,7 @@ fun TodoListScreen(
                         text = stringResource(id = R.string.noTodo),
                         modifier = Modifier
                             .padding(top = 18.dp, start = 18.dp)
+                            .fillMaxHeight()
                     )
                     return@HorizontalPager
                 }
